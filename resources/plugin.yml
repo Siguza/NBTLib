@@ -1,0 +1,10 @@
+name: NBTLib
+main: net.drgnome.nbtlib.NBTLib
+version: #VERSION#
+author: Siguza
+load: STARTUP
+commands:
+  nbtlib:
+    description: NBTLib
+    permissions: []
+    usage: /nbtlib
