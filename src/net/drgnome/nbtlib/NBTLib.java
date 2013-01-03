@@ -314,7 +314,7 @@ public class NBTLib extends JavaPlugin
     public static void putMinecraftField(String className, Object object, String name, Object value)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, NBTLibDisabledException
     {
-        putDynamicField(getMinecraftPackage() + className, object, name, value);
+        putField(getMinecraftPackage() + className, object, name, value);
     }
     
     /**
@@ -352,7 +352,7 @@ public class NBTLib extends JavaPlugin
     public static void putCraftbukkitField(String className, Object object, String name, Object value)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, NBTLibDisabledException
     {
-        putDynamicField(getCraftbukkitPackage() + className, object, name, value);
+        putField(getCraftbukkitPackage() + className, object, name, value);
     }
     
     /**
