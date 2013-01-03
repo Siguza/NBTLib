@@ -204,7 +204,7 @@ public class NBTLib extends JavaPlugin
     public static Object fetchMinecraftField(String className, Object object, String name)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, NBTLibDisabledException
     {
-        return fetchDynamicField(getMinecraftPackage() + className, object, name);
+        return fetchField(getMinecraftPackage() + className, object, name);
     }
     
     /**
@@ -240,7 +240,7 @@ public class NBTLib extends JavaPlugin
     public static Object fetchCraftbukkitField(String className, Object object, String name)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException, NBTLibDisabledException
     {
-        return fetchDynamicField(getCraftbukkitPackage() + className, object, name);
+        return fetchField(getCraftbukkitPackage() + className, object, name);
     }
     
     /**
@@ -645,6 +645,7 @@ public class NBTLib extends JavaPlugin
         Method[][] all = new Method[][]{clazz.getDeclaredMethods(), clazz.getMethods()};
         for(Method[] array : all)
         {
+        label1:
             for(Method m : array)
             {
                 if(m.getReturnType() == returnType)
@@ -658,7 +659,7 @@ public class NBTLib extends JavaPlugin
                     {
                         if(args[i] != params[i])
                         {
-                            continue;
+                            continue label1;
                         }
                     }
                     m.setAccessible(true);

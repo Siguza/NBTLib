@@ -258,7 +258,7 @@ public enum NBT
     public static byte[] saveNBT(Object o)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
-        return (byte[])NBTLib.invokeMinecraftDynamic("NBTCompressedStreamTools", null, byte[].class, new Object[]{"NBTTagCompound"}, new Object[]{o});
+        return (byte[])NBTLib.invokeMinecraftDynamic("NBTCompressedStreamTools", null, byte[].class, new Object[]{NBTLib.getMinecraftPackage() + "NBTTagCompound"}, new Object[]{o});
     }
     
     /**
@@ -270,7 +270,7 @@ public enum NBT
     public static void saveNBT(OutputStream stream, Object o)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
-        NBTLib.invokeMinecraftDynamic("NBTCompressedStreamTools", null, void.class, new Object[]{"NBTTagCompound", OutputStream.class}, new Object[]{o, stream});
+        NBTLib.invokeMinecraftDynamic("NBTCompressedStreamTools", null, void.class, new Object[]{NBTLib.getMinecraftPackage() + "NBTTagCompound", OutputStream.class}, new Object[]{o, stream});
     }
     
     /**
@@ -282,7 +282,7 @@ public enum NBT
     public static void saveNBT(DataOutput output, Object o)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
-        NBTLib.invokeMinecraftDynamic("NBTCompressedStreamTools", null, void.class, new Object[]{"NBTTagCompound", DataOutput.class}, new Object[]{o, output});
+        NBTLib.invokeMinecraftDynamic("NBTCompressedStreamTools", null, void.class, new Object[]{NBTLib.getMinecraftPackage() + "NBTTagCompound", DataOutput.class}, new Object[]{o, output});
     }
     
     /**
