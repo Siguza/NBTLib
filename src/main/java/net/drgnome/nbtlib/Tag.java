@@ -23,11 +23,6 @@ public final class Tag<T>
      */
     public static Tag<Boolean> newBool(boolean data)
     {
-        return newBool(Boolean.valueOf(data));
-    }
-    
-    static Tag<Boolean> newBool(Boolean data)
-    {
         return new Tag<Boolean>(NBT.BOOL, data);
     }
     
@@ -39,11 +34,6 @@ public final class Tag<T>
      * @return The byte tag.
      */
     public static Tag<Byte> newByte(byte data)
-    {
-        return newByte(Byte.valueOf(data));
-    }
-    
-    static Tag<Byte> newByte(Byte data)
     {
         return new Tag<Byte>(NBT.BYTE, data);
     }
@@ -57,11 +47,6 @@ public final class Tag<T>
      */
     public static Tag<Short> newShort(short data)
     {
-        return newShort(Short.valueOf(data));
-    }
-    
-    static Tag<Short> newShort(Short data)
-    {
         return new Tag<Short>(NBT.SHORT, data);
     }
     
@@ -73,11 +58,6 @@ public final class Tag<T>
      * @return The int tag.
      */
     public static Tag<Integer> newInt(int data)
-    {
-        return newInt(Integer.valueOf(data));
-    }
-    
-    static Tag<Integer> newInt(Integer data)
     {
         return new Tag<Integer>(NBT.INT, data);
     }
@@ -91,11 +71,6 @@ public final class Tag<T>
      */
     public static Tag<Long> newLong(long data)
     {
-        return newLong(Long.valueOf(data));
-    }
-    
-    static Tag<Long> newLong(Long data)
-    {
         return new Tag<Long>(NBT.LONG, data);
     }
     
@@ -108,11 +83,6 @@ public final class Tag<T>
      */
     public static Tag<Float> newFloat(float data)
     {
-        return newFloat(Float.valueOf(data));
-    }
-    
-    static Tag<Float> newFloat(Float data)
-    {
         return new Tag<Float>(NBT.FLOAT, data);
     }
     
@@ -124,11 +94,6 @@ public final class Tag<T>
      * @return The double tag.
      */
     public static Tag<Double> newDouble(double data)
-    {
-        return newDouble(Double.valueOf(data));
-    }
-    
-    static Tag<Double> newDouble(Double data)
     {
         return new Tag<Double>(NBT.DOUBLE, data);
     }

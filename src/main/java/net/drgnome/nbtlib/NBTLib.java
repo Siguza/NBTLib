@@ -24,8 +24,7 @@ public class NBTLib extends JavaPlugin
     {
         try
         {
-            // Where is your god NOW?
-            sun.reflect.Reflection.registerFieldsToFilter(NBTLib.class, new String[]{"_disabled"});
+            invoke("sun.reflect.Reflection", null, "getDeclaredMethod", new Class[]{Class.class, String[].class}, new Object[]{NBTLib.class, new String[]{"_disabled"}});
             // And if we finally can switch to java7 some time:
             // sun.reflect.Reflection.registerMethodsToFilter(Class.class, new String[]{"getDeclaredFields0"});
         }
@@ -121,7 +120,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return {@code true} if NBTLib is enabled, {@code false} otherwise.
      */
-    public boolean enabled()
+    public static boolean enabled()
     {
         return !_disabled;
     }

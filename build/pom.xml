@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.4.6-R0.3-SNAPSHOT</version>
+            <version>1.5.2-R0.2-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -35,7 +35,7 @@
         <finalName>${project.artifactId}</finalName>
         <resources>
             <resource>
-                <directory>${project.basedir}/../resources</directory>
+                <directory>${project.basedir}/src/main/resources</directory>
             </resource>
         </resources>
         <plugins>
@@ -67,23 +67,6 @@
                 <version>1.5.1</version>
                 <executions>
                     <execution>
-                        <id>herp</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>replace</goal>
-                        </goals>
-                        <configuration>
-                            <file>target/classes/plugin.yml</file>
-                            <replacements>
-                                <replacement>
-                                    <token>#VERSION#</token>
-                                    <value>${project.version}</value>
-                                </replacement>
-                            </replacements>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>derp</id>
                         <phase>process-sources</phase>
                         <goals>
                             <goal>replace</goal>

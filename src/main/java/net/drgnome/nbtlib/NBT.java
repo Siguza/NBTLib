@@ -85,8 +85,16 @@ public enum NBT
     {
         return tagToNBT(name, Tag.newCompound(map));
     }
-    
-    private static Object tagToNBT(String name, Tag tag)
+
+    /**
+     * <p>Converts a {@link Tag} into an NBTTagCompound.</p>
+     *
+     * @param name  The name of the tag.
+     * @param tag   The Tag.
+     *
+     * @return An NBTTagCompound.
+     */
+    public static Object tagToNBT(String name, Tag tag)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         switch(tag.getType())
@@ -152,7 +160,14 @@ public enum NBT
         }
     }
     
-    static Tag NBTToTag(Object o)
+    /**
+     * <p>Converts an NBTTagCompound into a {@link Tag}.</p>
+     *
+     * @param o The NBTTagCompound.
+     *
+     * @return A Tag.
+     */
+    public static Tag NBTToTag(Object o)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, NoSuchMethodException, NBTLibDisabledException, UnknownTagException
     {
         switch(getEnum(o))
