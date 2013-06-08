@@ -134,10 +134,22 @@ public final class Tag<T>
     public static Tag<List<Tag>> newList(List data)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, NoSuchMethodException, NBTLibDisabledException, UnknownTagException
     {
-        ArrayList<Tag> list = new ArrayList<Tag>();
-        for(Object o : data.toArray())
+        List<Tag> list;
+        try
         {
-            list.add(parse(o));
+            for(Object o : data.toArray())
+            {
+                Tag.class.cast(o);
+            }
+            list = (List<Tag>)data;
+        }
+        catch(ClassCastException e)
+        {
+            list = new ArrayList<Tag>();
+            for(Object o : data.toArray())
+            {
+                list.add(parse(o));
+            }
         }
         return new Tag<List<Tag>>(NBT.LIST, list);
     }
@@ -154,10 +166,22 @@ public final class Tag<T>
     public static Tag<Map<String, Tag>> newCompound(Map<String, ?> data)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchFieldException, NoSuchMethodException, NBTLibDisabledException, UnknownTagException
     {
-        HashMap<String, Tag> map = new HashMap<String, Tag>();
-        for(Map.Entry<String, ?> entry : data.entrySet())
+        Map<String, Tag> map;
+        try
         {
-            map.put(entry.getKey(), parse(entry.getValue()));
+            for(Object o : data.values().toArray())
+            {
+                Tag.class.cast(o);
+            }
+            map = (Map<String, Tag>)data;
+        }
+        catch(ClassCastException e)
+        {
+            map = new HashMap<String, Tag>();
+            for(Map.Entry<String, ?> entry : data.entrySet())
+            {
+                map.put(entry.getKey(), parse(entry.getValue()));
+            }
         }
         return new Tag<Map<String, Tag>>(NBT.COMPOUND, map);
     }
