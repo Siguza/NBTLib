@@ -482,7 +482,7 @@ public class NBTLib extends JavaPlugin
      * @return A new instance of {@code className}.
      */
     
-    public static Object instantiateMinecraft(String className, Object[] paramTypes, Object[] params)
+    public static Object instantiateMinecraft(String className, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         return instantiate(getMinecraftPackage() + className, paramTypes, params);
@@ -497,7 +497,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return A new instance of {@code className}.
      */
-    public static Object instantiateCraftbukkit(String className, Object[] paramTypes, Object[] params)
+    public static Object instantiateCraftbukkit(String className, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         return instantiate(getCraftbukkitPackage() + className, paramTypes, params);
@@ -513,7 +513,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return A new instance of {@code className}.
      */
-    public static Object instantiate(String className, Object[] paramTypes, Object[] params)
+    public static Object instantiate(String className, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException
     {
         return getConstructor(Class.forName(className), parseClass(paramTypes)).newInstance(params);
@@ -559,7 +559,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return Whatever the invoked method returns.
      */
-    public static Object invokeMinecraftDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object[] params)
+    public static Object invokeMinecraftDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         return invokeDynamic(getMinecraftPackage() + className, object, returnType, paramTypes, params);
@@ -576,7 +576,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return Whatever the invoked method returns.
      */
-    public static Object invokeMinecraft(String className, Object object, String name, Object[] paramTypes, Object[] params)
+    public static Object invokeMinecraft(String className, Object object, String name, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         return invoke(getMinecraftPackage() + className, object, name, paramTypes, params);
@@ -596,7 +596,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return Whatever the invoked method returns.
      */
-    public static Object invokeCraftbukkitDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object[] params)
+    public static Object invokeCraftbukkitDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         return invokeDynamic(getCraftbukkitPackage() + className, object, returnType, paramTypes, params);
@@ -613,7 +613,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return Whatever the invoked method returns.
      */
-    public static Object invokeCraftbukkit(String className, Object object, String name, Object[] paramTypes, Object[] params)
+    public static Object invokeCraftbukkit(String className, Object object, String name, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         return invoke(getCraftbukkitPackage() + className, object, name, paramTypes, params);
@@ -631,7 +631,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return Whatever the invoked method returns.
      */
-    public static Object invokeDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object[] params)
+    public static Object invokeDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         return getMethod(Class.forName(className), parseClass(returnType), parseClass(paramTypes)).invoke(object, params);
@@ -649,7 +649,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return Whatever the invoked method returns.
      */
-    public static Object invoke(String className, Object object, String name, Object[] paramTypes, Object[] params)
+    public static Object invoke(String className, Object object, String name, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
         return getMethod(Class.forName(className), name, parseClass(paramTypes)).invoke(object, params);
@@ -746,7 +746,7 @@ public class NBTLib extends JavaPlugin
      *
      * @return An array of classes.
      */
-    public static Class[] parseClass(Object[] array)
+    public static Class[] parseClass(Object... array)
     throws ClassNotFoundException
     {
         ArrayList<Class> list = new ArrayList<Class>();

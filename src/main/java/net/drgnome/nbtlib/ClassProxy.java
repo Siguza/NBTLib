@@ -72,7 +72,7 @@ public class ClassProxy
      * @throws SecurityException        If the super method cannot be accessed.
      * @throws Throwable                If the super method throws anything.
      */
-    public static Object callSuper(Object proxy, Method method, Object[] args) throws Throwable
+    public static Object callSuper(Object proxy, Method method, Object... args) throws Throwable
     {
         try
         {
@@ -100,7 +100,7 @@ public class ClassProxy
      *
      * @throws IllegalArgumentException If the proxy class has not yet been created: See {@link #getClass(Class, boolean) getClass()}.
      */
-    public static <T> T newInstance(Class<T> superClass, InvocationHandler handler, Class[] paramTypes, Object[] params) throws IllegalArgumentException
+    public static <T> T newInstance(Class<T> superClass, InvocationHandler handler, Class[] paramTypes, Object... params) throws IllegalArgumentException
     {
         return newInstance(superClass, null, handler, paramTypes, params);
     }
@@ -118,7 +118,7 @@ public class ClassProxy
      *
      * @throws IllegalArgumentException If the proxy class has not yet been created: See {@link #getClass(Class, boolean) getClass()}.
      */
-    public static <T> T newInstance(Class<T> superClass, MethodFilter filter, InvocationHandler handler, Class[] paramTypes, Object[] params) throws IllegalArgumentException
+    public static <T> T newInstance(Class<T> superClass, MethodFilter filter, InvocationHandler handler, Class[] paramTypes, Object... params) throws IllegalArgumentException
     {
         try
         {
