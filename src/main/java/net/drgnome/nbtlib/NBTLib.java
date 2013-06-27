@@ -1,5 +1,6 @@
 // Bukkit Plugin "NBTLib" by Siguza
-// Do whatever you want with this code.
+// The license under which this software is released can be accessed at:
+// http://creativecommons.org/licenses/by/3.0/
 
 package net.drgnome.nbtlib;
 
@@ -22,15 +23,15 @@ public class NBTLib extends JavaPlugin
 {
     static
     {
+        _log = Logger.getLogger("Minecraft");
         try
         {
             invoke("sun.reflect.Reflection", null, "getDeclaredMethod", new Class[]{Class.class, String[].class}, new Object[]{NBTLib.class, new String[]{"_disabled"}});
-            // And if we finally can switch to java7 some time:
-            // sun.reflect.Reflection.registerMethodsToFilter(Class.class, new String[]{"getDeclaredFields0"});
         }
         catch(Throwable t)
         {
         }
+        clinit();
     }
     
     /**
@@ -41,17 +42,13 @@ public class NBTLib extends JavaPlugin
     /**
      * Just the console.
      */
-    public static final Logger _log = Logger.getLogger("Minecraft");
+    public static final Logger _log;
     private static String _minecraft;
     private static String _craftbukkit;
     private static boolean _disabled;
     
-    /**
-     * <i>For Bukkit, please ignore.</i>
-     */
-    public NBTLib()
+    private static void clinit()
     {
-        super();
         _disabled = true;
         ArrayList<Package> list = new ArrayList<Package>();
         for(Package p : Package.getPackages())

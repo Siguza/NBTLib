@@ -1,5 +1,6 @@
 // Bukkit Plugin "NBTLib" by Siguza
-// Do whatever you want with this code.
+// The license under which this software is released can be accessed at:
+// http://creativecommons.org/licenses/by/3.0/
 
 package net.drgnome.nbtlib;
 
