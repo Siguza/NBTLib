@@ -120,6 +120,7 @@
                         <phase>post-site</phase>
                         <configuration>
                             <tasks>
+                                <delete dir="/var/www/drgnome/javadoc/nbtlib"/>
                                 <copy todir="/var/www/drgnome/javadoc/nbtlib">
                                     <fileset dir="${project.basedir}/apidocs" includes="**/*" />
                                 </copy>
