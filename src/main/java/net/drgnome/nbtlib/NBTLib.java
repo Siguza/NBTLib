@@ -123,6 +123,36 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
+     * Returns a {@link Class} from the Minecraft package.
+     *
+     * @param className The name of the class.
+     *
+     * @return The class from the Minecraft package.
+     *
+     * @throws ClassNotFoundException   If the class could not be found.
+     * @throws NBTLibDisabledException  If {@link NBTLib} has been disabled.
+     */
+    public static Class getMinecraftClass(String className) throws ClassNotFoundException, NBTLibDisabledException
+    {
+        return Class.forName(getMinecraftPackage() + className);
+    }
+    
+    /**
+     * Returns a {@link Class} from the Craftbukkit package.
+     *
+     * @param className The name of the class.
+     *
+     * @return The class from the Craftbukkit package.
+     *
+     * @throws ClassNotFoundException   If the class could not be found.
+     * @throws NBTLibDisabledException  If {@link NBTLib} has been disabled.
+     */
+    public static Class getCraftbukkitClass(String className) throws ClassNotFoundException, NBTLibDisabledException
+    {
+        return Class.forName(getCraftbukkitPackage() + className);
+    }
+    
+    /**
      * <p>Returns the Minecraft version.</p>
      * <p>Actually calls {@code Bukkit.getVersion()}.</p>
      *
