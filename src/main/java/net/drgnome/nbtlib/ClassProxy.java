@@ -13,6 +13,7 @@ import java.lang.reflect.*;
  * <p>This means if you specify a class A, then a class B which extends A will be created and, depending on the given {@link MethodFilter}, some or all non-static non-final methods which are public or protected will be overridden and dispatched to a provided {@link InvocationHandler}.</p>
  * <b>Examples:</b>
  * 
+ * @since 0.3
  */
 public class ClassProxy
 {
@@ -258,7 +259,7 @@ public class ClassProxy
         m.setAccessible(true);
         try
         {
-            return (Class)m.invoke(getCL(superClass), _namePrefix + _count, b, 0, b.length);
+            return (Class)m.invoke(ClassProxy.class.getClassLoader(), _namePrefix + _count, b, 0, b.length);
         }
         catch(InvocationTargetException e)
         {
@@ -275,16 +276,6 @@ public class ClassProxy
             c.initCause(t);
             throw c;
         }
-    }
-    
-    private static ClassLoader getCL(Class clazz)
-    {
-        ClassLoader cl = clazz.getClassLoader();
-        if(cl == null)
-        {
-            cl = ClassProxy.class.getClassLoader();
-        }
-        return (cl == null) ? ClassLoader.getSystemClassLoader() : cl;
     }
     
     private static synchronized byte[] compileClass(Class superClass, Method[] mthd) throws ClassFormatError
@@ -524,16 +515,25 @@ public class ClassProxy
             method.write(pool.getStringIndex(getMethodSignature(mthd[methodNum]), 2));
             method.write(0, 2, 0, 6);
             method.write(writeInt(actualCode.length + 12, 4));
-            method.write(writeInt((param.length > 0) ? 7 : 4, 2));
+            boolean hasLong = false;
             int len = 1; // + "this"
             for(Class par : param)
             {
-                len += (par.equals(Long.TYPE) || par.equals(Double.TYPE)) ? 2 : 1;
+                if((par.equals(Long.TYPE) || par.equals(Double.TYPE)))
+                {
+                    len += 2;
+                    hasLong = true;
+                }
+                else
+                {
+                    len++;
+                }
             }
             if(len >= magicStack)
             {
                 magicStack = len + 1;
             }
+            method.write(writeInt((param.length > 0) ? (hasLong ? 8 : 7) : 4, 2));
             method.write(writeInt(len, 2));
             method.write(writeInt(actualCode.length, 4));
             method.write(actualCode);

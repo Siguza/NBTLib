@@ -5,7 +5,7 @@
 package net.drgnome.nbtlib;
 
 /**
- * <p>Thrown if the NBTLib is disabled.</p>
+ * <p>Thrown if the NBTLib is disabled and a method of it is invoked.</p>
  */
 public class NBTLibDisabledException extends Exception
 {

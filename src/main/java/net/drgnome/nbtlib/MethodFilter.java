@@ -8,6 +8,8 @@ import java.lang.reflect.Method;
 
 /**
  * <p>When creating a new proxy using {@link ClassProxy}, you may specify a MethodFilter to select which methods should be overridden and which not.</p>
+ *
+ * @since 0.3
  */
 public interface MethodFilter
 {

@@ -418,7 +418,6 @@ public enum NBT
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Converts a Bukkit ItemStack into a Minecraft ItemStack.</p>
      *
      * @param item The Bukkit {@link ItemStack}.
@@ -432,7 +431,6 @@ public enum NBT
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Converts a Minecraft ItemStack into a Bukkit ItemStack.</p>
      *
      * @param o The Minecraft ItemStack.
@@ -446,7 +444,6 @@ public enum NBT
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Returns an {@link NBT} representing the type of a Minecraft NBTBase object.</p>
      *
      * @param o The Minecraft ItemStack.

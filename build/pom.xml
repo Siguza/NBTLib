@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.5.2-R0.2-SNAPSHOT</version>
+            <version>1.5.2-R1.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -149,6 +149,10 @@
                         <link>http://docs.oracle.com/javase/6/docs/api/</link>
                         <link>http://jd.bukkit.org/apidocs/</link>
                     </links>
+                    <sourcepath>${project.basedir}/src/main/java/net/drgnome/nbtlib</sourcepath>
+                    <sourceFileExcludes>
+                        <exclude>NPlugin.java</exclude>
+                    </sourceFileExcludes>
                 </configuration>
             </plugin>
             <plugin>

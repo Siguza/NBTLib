@@ -8,10 +8,6 @@ import java.lang.reflect.*;
 import java.util.*;
 import java.util.logging.*;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.*;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 /**
  * <p>The "main" class and base of NBTLib.</p>
@@ -19,7 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
  * <p>If you need to access other methods or fields of Minecraft or Craftbukkit, this might be something for you.</p>
  * <p><i><b>Note:</b> When accessing private or protected fields of methods, you <b><u>must</u></b> specify the class declaring the field or method! Subclasses will not work!!</i></p>
  */
-public class NBTLib extends JavaPlugin
+public class NBTLib
 {
     static
     {
@@ -84,35 +80,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <i>For Bukkit, please ignore.</i>
-     */
-    public void onEnable()
-    {
-        _log.info("[NBTLib] Enabling");
-        if(_disabled)
-        {
-            getPluginLoader().disablePlugin(this);
-        }
-    }
-    
-    /**
-     * <i>For Bukkit, please ignore.</i>
-     */
-    public void onDisable()
-    {
-        _log.info("[NBTLib] Disabling");
-    }
-    
-    /**
-     * <i>For Bukkit, please ignore.</i>
-     */
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
-    {
-        sender.sendMessage(ChatColor.AQUA + "NBTLib version: " + _version);
-        return true;
-    }
-    
-    /**
      * Returns {@code true} if NBTLib is enabled and {@code false} otherwise.
      *
      * @return {@code true} if NBTLib is enabled, {@code false} otherwise.
@@ -131,6 +98,8 @@ public class NBTLib extends JavaPlugin
      *
      * @throws ClassNotFoundException   If the class could not be found.
      * @throws NBTLibDisabledException  If {@link NBTLib} has been disabled.
+     *
+     * @since 0.3
      */
     public static Class getMinecraftClass(String className) throws ClassNotFoundException, NBTLibDisabledException
     {
@@ -146,6 +115,8 @@ public class NBTLib extends JavaPlugin
      *
      * @throws ClassNotFoundException   If the class could not be found.
      * @throws NBTLibDisabledException  If {@link NBTLib} has been disabled.
+     *
+     * @since 0.3
      */
     public static Class getCraftbukkitClass(String className) throws ClassNotFoundException, NBTLibDisabledException
     {
@@ -270,7 +241,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Tries to identify a field of class by the fields type and returns the value of the first found field.</p>
      *
      * @param className The full name of the class.
@@ -288,7 +258,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Fetches the value of a field of a class.</p>
      *
      * @param className The full name of the class.
@@ -382,7 +351,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Tries to identify a field of class by the fields type and puts the value into the first found field.</p>
      *
      * @param className The full name of the class.
@@ -401,7 +369,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Puts a value into a field of a class.</p>
      *
      * @param className The full name of the class.
@@ -420,7 +387,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Tries to identify a field of class by the fields type. The first matching field will be returned.</p>
      *
      * @param clazz The class.
@@ -447,7 +413,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Returns a field of a class.</p>
      *
      * @param clazz The class.
@@ -504,7 +469,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Returns a new instance of {@code className}.</p>
      *
      * @param className     The full name of the class.
@@ -520,7 +484,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Returns the constructor of a class.</p>
      *
      * @param clazz         The class.
@@ -620,7 +583,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Tries to identify a method of a class by its return and parameter types. The first one found will be invoked.</p>
      *
      * @param className     The full name of the class.
@@ -638,7 +600,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Invokes a method of a class.</p>
      *
      * @param className     The full name of the class.
@@ -656,7 +617,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Returns a method of a class. The method is identified by its return type and its parameter types. The first matching method will be returned.</p>
      *
      * @param clazz         The class containing the method.
@@ -712,7 +672,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Returns a method of a class.</p>
      *
      * @param clazz     The class containing the method.
@@ -739,7 +698,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Parses an array of {@link Class Classes} and/or {@link String Strings} to only Classes.</p>
      *
      * @param array An array of {@link Class Classes} and/or {@link String Strings}.
@@ -758,7 +716,6 @@ public class NBTLib extends JavaPlugin
     }
     
     /**
-     * <p><i><b>Note:</b> You will most likely not need this.</i></p>
      * <p>Parses a {@link String} or {@link Class} to a Class.</p>
      *
      * @param o A {@link String} or {@link Class}.
