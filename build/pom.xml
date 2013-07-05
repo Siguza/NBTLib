@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>net.drgnome.nbtlib</groupId>
     <artifactId>NBTLib</artifactId>
-    <version>0.3</version>
+    <version>0.3.1</version>
     <name>NBTLib</name>
     <description>Bukkit Plugin "NBTLib".</description>
     <url>http://dev.bukkit.org/server-mods/nbtlib/</url>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.5.2-R1.1-SNAPSHOT</version>
+            <version>1.6.1-R0.1-SNAPSHOT</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

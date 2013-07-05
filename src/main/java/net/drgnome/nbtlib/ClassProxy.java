@@ -433,7 +433,11 @@ public class ClassProxy
         }
         for(int methodNum = 0; methodNum < mthd.length; methodNum++)
         {
-            magicPart.write(0x2a); // aload_0
+            boolean doMagic = ((mthd[methodNum].getModifiers() & Modifier.ABSTRACT) == 0);
+            if(doMagic)
+            {
+                magicPart.write(0x2a); // aload_0
+            }
             Class[] param = mthd[methodNum].getParameterTypes();
             tmp.write(0x2a, 0x2a, 0xb4, 0, 8, 0xb2, 0, 7);
             tmp.write(smartInt(methodNum));
@@ -498,11 +502,14 @@ public class ClassProxy
                 convertToObject(pool, param[i], tmp);
                 tmp.write(0x53); // aastore
                 pos += (param[i].equals(Long.TYPE) || param[i].equals(Double.TYPE)) ? 2 : 1;
-                // Prepare magic
-                magicPart.write(0x2c); // aload_2
-                magicPart.write(smartInt(i));
-                magicPart.write(0x32); // aaload
-                convertFromObject(pool, param[i], magicPart);
+                if(doMagic)
+                {
+                    // Prepare magic
+                    magicPart.write(0x2c); // aload_2
+                    magicPart.write(smartInt(i));
+                    magicPart.write(0x32); // aaload
+                    convertFromObject(pool, param[i], magicPart);
+                }
             }
             tmp.write(0xb8);
             tmp.write(methodRedirect);
@@ -529,34 +536,37 @@ public class ClassProxy
                     len++;
                 }
             }
-            if(len >= magicStack)
-            {
-                magicStack = len + 1;
-            }
             method.write(writeInt((param.length > 0) ? (hasLong ? 8 : 7) : 4, 2));
             method.write(writeInt(len, 2));
             method.write(writeInt(actualCode.length, 4));
             method.write(actualCode);
             method.write(0, 0, 0, 0, 0, 5, 0, 0, 0, 0);
             methods.add(method.toByteArray());
-            // And now a little magic
-            magicPart.write(0xb7); // invokespecial
-            magicPart.write(pool.getMethodIndex(mthd[methodNum], 2));
-            convertToObject(pool, rType, magicPart);
-            magicPart.write(0xb0); // areturn
-            // Next
-            magicCode.write(0x1b); // iload_1
-            if(methodNum == 0)
+            if(doMagic)
             {
-                magicCode.write(0x9a);
+                // And now a little magic
+                if(len >= magicStack)
+                {
+                    magicStack = len + 1;
+                }
+                magicPart.write(0xb7); // invokespecial
+                magicPart.write(pool.getMethodIndex(mthd[methodNum], 2));
+                convertToObject(pool, rType, magicPart);
+                magicPart.write(0xb0); // areturn
+                // Next
+                magicCode.write(0x1b); // iload_1
+                if(methodNum == 0)
+                {
+                    magicCode.write(0x9a);
+                }
+                else
+                {
+                    magicCode.write(smartInt(methodNum));
+                    magicCode.write(0xa0);
+                }
+                magicCode.write(writeInt(magicPart.size() + 3, 2));
+                magicCode.write(magicPart.toByteArray());
             }
-            else
-            {
-                magicCode.write(smartInt(methodNum));
-                magicCode.write(0xa0);
-            }
-            magicCode.write(writeInt(magicPart.size() + 3, 2));
-            magicCode.write(magicPart.toByteArray());
         }
         // Maaagic :D
         magicCode.write(0xbb); // new
@@ -803,7 +813,7 @@ public class ClassProxy
                         continue i_haz_a_loop;
                     }
                 }
-                if((filter == null) || (filter.filterMethod(m)))
+                if((filter == null) || filter.filterMethod(m) || ((mf & Modifier.ABSTRACT) == Modifier.ABSTRACT))
                 {
                     list.add(m);
                 }

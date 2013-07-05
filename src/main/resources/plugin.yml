@@ -1,5 +1,5 @@
 name: NBTLib
-main: net.drgnome.nbtlib.NBTLib
+main: net.drgnome.nbtlib.NPlugin
 version: #VERSION#
 author: Siguza
 load: STARTUP
