@@ -12,7 +12,7 @@ import org.bukkit.Bukkit;
 /**
  * <p>The "main" class and base of NBTLib.</p>
  * <p>If you're just using NBT Tags, see the {@link NBT NBT Class}.</p>
- * <p>If you need to access other methods or fields of Minecraft or Craftbukkit, this might be something for you.</p>
+ * <p>If you need to access other methods or fields of Minecraft or Craftbukkit, this is for you.</p>
  * <p><i><b>Note:</b> When accessing private or protected fields of methods, you <b><u>must</u></b> specify the class declaring the field or method! Subclasses will not work!!</i></p>
  */
 public class NBTLib
@@ -22,7 +22,7 @@ public class NBTLib
         _log = Logger.getLogger("Minecraft");
         try
         {
-            invoke("sun.reflect.Reflection", null, "getDeclaredMethod", new Class[]{Class.class, String[].class}, new Object[]{NBTLib.class, new String[]{"_disabled"}});
+            invoke("sun.reflect.Reflection", null, "registerFieldsToFilter", new Class[]{Class.class, String[].class}, new Object[]{NBTLib.class, new String[]{"_disabled"}});
         }
         catch(Throwable t)
         {
@@ -41,6 +41,7 @@ public class NBTLib
     public static final Logger _log;
     private static String _minecraft;
     private static String _craftbukkit;
+    private static String _pversion;
     private static boolean _disabled;
     
     private static void clinit()
@@ -57,6 +58,7 @@ public class NBTLib
         if(list.size() == 1)
         {
             _minecraft = list.get(0).getName();
+            _pversion = _minecraft.substring(21);
             _craftbukkit = "org.bukkit.craftbukkit" + _minecraft.substring(20);
             if(Package.getPackage(_craftbukkit) == null)
             {
@@ -121,6 +123,17 @@ public class NBTLib
     public static Class getCraftbukkitClass(String className) throws ClassNotFoundException, NBTLibDisabledException
     {
         return Class.forName(getCraftbukkitPackage() + className);
+    }
+    
+    /**
+     * <p>Returns the Minecraft package version.</p>
+     * <p>Example: {@code v1_6_R1}</p>
+     *
+     * @return The Minecraft package version.
+     */
+    public static String getPackageVersion()
+    {
+        return _pversion;
     }
     
     /**
