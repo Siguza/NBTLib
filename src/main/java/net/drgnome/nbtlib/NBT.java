@@ -88,6 +88,7 @@ public enum NBT
     }
 
     /**
+     * <p><i><b>Deprecated.</b></i></p>
      * <p>Converts a {@link Tag} into an NBTTagCompound.</p>
      *
      * @param name  The name of the tag.
@@ -95,46 +96,60 @@ public enum NBT
      *
      * @return An NBTTagCompound.
      */
+    @Deprecated
     public static Object tagToNBT(String name, Tag tag)
+    throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
+    {
+        return tagToNBT(tag);
+    }
+    
+    /**
+     * <p>Converts a {@link Tag} into an NBTTagCompound.</p>
+     *
+     * @param tag   The Tag.
+     *
+     * @return An NBTTagCompound.
+     */
+    public static Object tagToNBT(Tag tag)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
         switch(tag.getType())
         {
             case BOOL:
-                return NBTLib.instantiateMinecraft("NBTTagByte", new Object[]{String.class, byte.class}, new Object[]{name, (byte)(((Boolean)tag.get()).booleanValue() ? 1 : 0)});
+                return NBTLib.instantiateMinecraft("NBTTagByte", new Object[]{byte.class}, new Object[]{(byte)(((Boolean)tag.get()).booleanValue() ? 1 : 0)});
             case BYTE:
-                return NBTLib.instantiateMinecraft("NBTTagByte", new Object[]{String.class, byte.class}, new Object[]{name, ((Byte)tag.get()).byteValue()});
+                return NBTLib.instantiateMinecraft("NBTTagByte", new Object[]{byte.class}, new Object[]{((Byte)tag.get()).byteValue()});
             case SHORT:
-                return NBTLib.instantiateMinecraft("NBTTagShort", new Object[]{String.class, short.class}, new Object[]{name, ((Short)tag.get()).shortValue()});
+                return NBTLib.instantiateMinecraft("NBTTagShort", new Object[]{short.class}, new Object[]{((Short)tag.get()).shortValue()});
             case INT:
-                return NBTLib.instantiateMinecraft("NBTTagInt", new Object[]{String.class, int.class}, new Object[]{name, ((Integer)tag.get()).intValue()});
+                return NBTLib.instantiateMinecraft("NBTTagInt", new Object[]{int.class}, new Object[]{((Integer)tag.get()).intValue()});
             case LONG:
-                return NBTLib.instantiateMinecraft("NBTTagLong", new Object[]{String.class, long.class}, new Object[]{name, ((Long)tag.get()).longValue()});
+                return NBTLib.instantiateMinecraft("NBTTagLong", new Object[]{long.class}, new Object[]{((Long)tag.get()).longValue()});
             case FLOAT:
-                return NBTLib.instantiateMinecraft("NBTTagFloat", new Object[]{String.class, float.class}, new Object[]{name, ((Float)tag.get()).floatValue()});
+                return NBTLib.instantiateMinecraft("NBTTagFloat", new Object[]{float.class}, new Object[]{((Float)tag.get()).floatValue()});
             case DOUBLE:
-                return NBTLib.instantiateMinecraft("NBTTagDouble", new Object[]{String.class, double.class}, new Object[]{name, ((Double)tag.get()).doubleValue()});
+                return NBTLib.instantiateMinecraft("NBTTagDouble", new Object[]{double.class}, new Object[]{((Double)tag.get()).doubleValue()});
             case BYTE_ARRAY:
-                return NBTLib.instantiateMinecraft("NBTTagByteArray", new Object[]{String.class, byte[].class}, new Object[]{name, (byte[])tag.get()});
+                return NBTLib.instantiateMinecraft("NBTTagByteArray", new Object[]{byte[].class}, new Object[]{(byte[])tag.get()});
             case STRING:
-                return NBTLib.instantiateMinecraft("NBTTagString", new Object[]{String.class, String.class}, new Object[]{name, (String)tag.get()});
+                return NBTLib.instantiateMinecraft("NBTTagString", new Object[]{String.class}, new Object[]{(String)tag.get()});
             case LIST:
-                Object list = NBTLib.instantiateMinecraft("NBTTagList", new Object[]{String.class}, new Object[]{name});
+                Object list = NBTLib.instantiateMinecraft("NBTTagList", new Object[0], new Object[0]);
                 for(Tag t : ((List<Tag>)tag.get()).toArray(new Tag[0]))
                 {
                     NBTLib.invokeMinecraft("NBTTagList", list, "add", new Object[]{NBTLib.getMinecraftPackage() + "NBTBase"}, new Object[]{tagToNBT("", t)});
                 }
                 return list;
             case COMPOUND:
-                Object map = NBTLib.instantiateMinecraft("NBTTagCompound", new Object[]{String.class}, new Object[]{name});
+                Object map = NBTLib.instantiateMinecraft("NBTTagCompound", new Object[0], new Object[0]);
                 for(Map.Entry<String, Tag> entry : ((Map<String, Tag>)tag.get()).entrySet())
                 {
                     String key = entry.getKey();
-                    NBTLib.invokeMinecraft("NBTTagCompound", map, "set", new Object[]{String.class, NBTLib.getMinecraftPackage() + "NBTBase"}, new Object[]{key, tagToNBT(key, entry.getValue())});
+                    NBTLib.invokeMinecraft("NBTTagCompound", map, "set", new Object[]{NBTLib.getMinecraftPackage() + "NBTBase"}, new Object[]{key, tagToNBT(key, entry.getValue())});
                 }
                 return map;
             case INT_ARRAY:
-                return NBTLib.instantiateMinecraft("NBTTagIntArray", new Object[]{String.class, int[].class}, new Object[]{name, (int[])tag.get()});
+                return NBTLib.instantiateMinecraft("NBTTagIntArray", new Object[]{int[].class}, new Object[]{(int[])tag.get()});
         }
         return null;
     }
