@@ -127,7 +127,7 @@ public class NBTLib
     
     /**
      * <p>Returns the Minecraft package version.</p>
-     * <p>Example: {@code v1_6_R1}</p>
+     * <p>Example: {@code v1_7_R1}</p>
      *
      * @return The Minecraft package version.
      */
@@ -138,7 +138,7 @@ public class NBTLib
     
     /**
      * <p>Returns the Minecraft version.</p>
-     * <p>Actually calls {@code Bukkit.getVersion()}.</p>
+     * <p>This simply calls {@code Bukkit.getVersion()}.</p>
      *
      * @return The Minecraft version.
      */
@@ -148,7 +148,7 @@ public class NBTLib
     }
     
     /**
-     * Returns the Minecraft package name <b>with</b> a trailing dot. Example: {@code net.minecraft.server.v1_4_6.}
+     * Returns the Minecraft package name <b>with</b> a trailing dot. Example: {@code net.minecraft.server.v1_7_R1.}
      *
      * @return The Minecraft package name.
      *
@@ -165,7 +165,7 @@ public class NBTLib
     }
     
     /**
-     * Returns the Craftbukkit package name <b>with</b> a trailing dot. Example: {@code org.bukkit.craftbukkit.v1_4_6.}
+     * Returns the Craftbukkit package name <b>with</b> a trailing dot. Example: {@code org.bukkit.craftbukkit.v1_7_R1.}
      *
      * @return The Craftbukkit package name.
      *

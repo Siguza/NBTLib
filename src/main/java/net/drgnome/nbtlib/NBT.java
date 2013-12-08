@@ -70,7 +70,7 @@ public enum NBT
     public static ItemStack mapToItemStack(Map<String, ?> map)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchFieldException, NoSuchMethodException, NBTLibDisabledException, UnknownTagException
     {
-        return mcToBukkit(loadItem(mapToNBT("", map)));
+        return mcToBukkit(loadItem(mapToNBT(map)));
     }
     
     /**
@@ -81,10 +81,24 @@ public enum NBT
      *
      * @return An NBTTagCompound.
      */
+    @Deprecated
     public static Object mapToNBT(String name, Map<String, ?> map)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchFieldException, NoSuchMethodException, NBTLibDisabledException, UnknownTagException
     {
         return tagToNBT(name, Tag.newCompound(map));
+    }
+    
+    /**
+     * <p>Converts a {@link Map} into an NBTTagCompound.</p>
+     *
+     * @param map   The map.
+     *
+     * @return An NBTTagCompound.
+     */
+    public static Object mapToNBT(Map<String, ?> map)
+    throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchFieldException, NoSuchMethodException, NBTLibDisabledException, UnknownTagException
+    {
+        return tagToNBT(Tag.newCompound(map));
     }
 
     /**
@@ -145,7 +159,7 @@ public enum NBT
                 for(Map.Entry<String, Tag> entry : ((Map<String, Tag>)tag.get()).entrySet())
                 {
                     String key = entry.getKey();
-                    NBTLib.invokeMinecraft("NBTTagCompound", map, "set", new Object[]{NBTLib.getMinecraftPackage() + "NBTBase"}, new Object[]{key, tagToNBT(key, entry.getValue())});
+                    NBTLib.invokeMinecraft("NBTTagCompound", map, "set", new Object[]{String.class, NBTLib.getMinecraftPackage() + "NBTBase"}, new Object[]{key, tagToNBT(key, entry.getValue())});
                 }
                 return map;
             case INT_ARRAY:
