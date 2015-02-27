@@ -3,11 +3,16 @@
 // The full license and a human-readable summary can be found at the following location:
 // http://creativecommons.org/licenses/by/3.0/
 
-package net.drgnome.nbtlib;
+package net.siguza.nbtlib;
 
 /**
- * <p>Thrown by Tag.newList() and Tag.newCompound() if the List of Map contains a value that can't be represented by a {@link Tag}.</p>
+ * Utility for creating class proxies.
+ *
+ * @since 1.0.0
  */
-public class UnknownTagException extends Exception
+public final class ClassProxy
 {
+    private ClassProxy()
+    {
+    }
 }

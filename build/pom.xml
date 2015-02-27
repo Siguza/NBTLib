@@ -1,12 +1,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>net.drgnome.nbtlib</groupId>
+    <groupId>net.siguza.nbtlib</groupId>
     <artifactId>NBTLib</artifactId>
-    <version>0.3.3</version>
+    <version>1.0.0</version>
     <name>NBTLib</name>
     <description>Bukkit Plugin "NBTLib".</description>
-    <url>http://dev.bukkit.org/server-mods/nbtlib/</url>
+    <url>http://dev.bukkit.org/bukkit-plugins/nbtlib/</url>
     <scm>
         <url>https://github.com/Siguza/NBTLib</url>
         <connection>scm:git:git://github.com:Siguza/NBTLib.git</connection>
@@ -24,8 +24,8 @@
     <dependencies>
         <dependency>
             <groupId>org.bukkit</groupId>
-            <artifactId>craftbukkit</artifactId>
-            <version>1.7.2-R0.1-SNAPSHOT</version>
+            <artifactId>bukkit</artifactId>
+            <version>1.7.9-R0.2</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>
@@ -92,15 +92,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.0</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
@@ -121,8 +112,8 @@
                         <phase>post-site</phase>
                         <configuration>
                             <tasks>
-                                <delete dir="/var/www/drgnome/javadoc/nbtlib"/>
-                                <copy todir="/var/www/drgnome/javadoc/nbtlib">
+                                <delete dir="~/javadoc/nbtlib"/>
+                                <copy todir="~/javadoc/nbtlib">
                                     <fileset dir="${project.basedir}/apidocs" includes="**/*" />
                                 </copy>
                             </tasks>
@@ -138,7 +129,24 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.15</version>
             </plugin>
-            <!-- Test -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-project-info-reports-plugin</artifactId>
+                <version>2.7</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                    <compilerArguments>
+                        <Xlint:deprecation />
+                        <Xlint:unchecked />
+                    </compilerArguments>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -150,16 +158,11 @@
                         <link>http://docs.oracle.com/javase/6/docs/api/</link>
                         <link>http://jd.bukkit.org/apidocs/</link>
                     </links>
-                    <sourcepath>${project.basedir}/src/main/java/net/drgnome/nbtlib</sourcepath>
+                    <sourcepath>${project.basedir}/src/main/java/net/drgnome/nbtlib:${project.basedir}/src/main/java/net/siguza/nbtlib</sourcepath>
                     <sourceFileExcludes>
                         <exclude>NPlugin.java</exclude>
                     </sourceFileExcludes>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>2.7</version>
             </plugin>
         </plugins>
     </build>

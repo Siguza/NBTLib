@@ -1,5 +1,6 @@
 // Bukkit Plugin "NBTLib" by Siguza
-// The license under which this software is released can be accessed at:
+// Released under the CC BY 3.0 (CreativeCommons Attribution 3.0 Unported) license.
+// The full license and a human-readable summary can be found at the following location:
 // http://creativecommons.org/licenses/by/3.0/
 
 package net.drgnome.nbtlib;
@@ -131,6 +132,7 @@ public class ClassProxy
      *
      * @throws IllegalArgumentException If the proxy class has not yet been created: See {@link #getClass(Class, boolean) getClass()}.
      */
+    @SuppressWarnings("unchecked")
     public static <T> T newInstance(Class<T> superClass, MethodFilter filter, InvocationHandler handler, Class[] paramTypes, Object... params) throws IllegalArgumentException
     {
         try

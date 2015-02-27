@@ -1,12 +1,12 @@
 // Bukkit Plugin "NBTLib" by Siguza
-// The license under which this software is released can be accessed at:
+// Released under the CC BY 3.0 (CreativeCommons Attribution 3.0 Unported) license.
+// The full license and a human-readable summary can be found at the following location:
 // http://creativecommons.org/licenses/by/3.0/
 
 package net.drgnome.nbtlib;
 
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.logging.*;
 import org.bukkit.Bukkit;
 
 /**
@@ -15,11 +15,18 @@ import org.bukkit.Bukkit;
  * <p>If you need to access other methods or fields of Minecraft or Craftbukkit, this is for you.</p>
  * <p><i><b>Note:</b> When accessing private or protected fields of methods, you <b><u>must</u></b> specify the class declaring the field or method! Subclasses will not work!!</i></p>
  */
+@SuppressWarnings("unchecked")
 public class NBTLib
 {
+    private static final String _minecraft;
+    private static final String _craftbukkit;
+    private static final String _pversion;
+    private static boolean _disabled;
+    
     static
     {
-        _log = Logger.getLogger("Minecraft");
+        final String mc = "net.minecraft.server";
+        final String cb = "org.bukkit.craftbukkit";
         try
         {
             invoke("sun.reflect.Reflection", null, "registerFieldsToFilter", new Class[]{Class.class, String[].class}, new Object[]{NBTLib.class, new String[]{"_disabled"}});
@@ -27,58 +34,88 @@ public class NBTLib
         catch(Throwable t)
         {
         }
-        clinit();
-    }
-    
-    /**
-     * Just the NBTLib version.
-     */
-    public static final String _version = "#VERSION#";
-    
-    /**
-     * Just the console.
-     */
-    public static final Logger _log;
-    private static String _minecraft;
-    private static String _craftbukkit;
-    private static String _pversion;
-    private static boolean _disabled;
-    
-    private static void clinit()
-    {
-        _disabled = true;
-        ArrayList<Package> list = new ArrayList<Package>();
-        for(Package p : Package.getPackages())
+        boolean disabled = true;
+        String craftbukkit = Bukkit.getServer().getClass().getPackage().getName();
+        if(!craftbukkit.startsWith(cb))
         {
-            if(p.getName().startsWith("net.minecraft.server"))
+            ArrayList<String> list = new ArrayList<String>();
+            for(Package p : Package.getPackages())
             {
-                list.add(p);
+                String name = p.getName();
+                if(name.startsWith(cb + ".v"))
+                {
+                    list.add(name);
+                }
             }
-        }
-        if(list.size() == 1)
-        {
-            _minecraft = list.get(0).getName();
-            _pversion = _minecraft.substring(21);
-            _craftbukkit = "org.bukkit.craftbukkit" + _minecraft.substring(20);
-            if(Package.getPackage(_craftbukkit) == null)
+            if(list.size() == 1)
             {
-                _log.severe("[NBTLib] Can't find Craftbukkit package! (" + _minecraft + "/" + _craftbukkit + ")");
+                craftbukkit = list.get(0);
             }
             else
             {
-                _minecraft += ".";
-                _craftbukkit += ".";
-                _disabled = false;
+                NPlugin._log.severe("[NBTLib] Can't find Craftbukkit package! " + list.size() + " possible packages found:");
+                for(String s : list)
+                {
+                    NPlugin._log.severe("[NBTLib] " + s);
+                }
             }
         }
-        else
+        String pversion = craftbukkit.substring(23);
+        String minecraft = mc + "." + pversion;
+        try
         {
-            _log.severe("[NBTLib] Can't find Minecraft package! " + list.size() + " possible packages found:");
-            for(Package p : list.toArray(new Package[0]))
+            findClass(minecraft + ".World");
+            disabled = false;
+        }
+        catch(ClassNotFoundException cnfe1)
+        {
+            try
             {
-                _log.severe("[NBTLib] " + p.getName());
+                findClass(minecraft + ".Entity");
+                disabled = false;
+            }
+            catch(ClassNotFoundException cnfe2)
+            {
+                try
+                {
+                    findClass(minecraft + ".Block");
+                    disabled = false;
+                }
+                catch(ClassNotFoundException cnfe3)
+                {
+                    try
+                    {
+                        /*Class clazz = net.minecraft.server.v1_6_R3.EntityHuman.class;
+                        clazz = findClass("net.minecraft." + "server".toLowerCase() + ".v1_6_R3.EntityHuman");*/
+                        findClass(minecraft + ".Item");
+                        disabled = false;
+                    }
+                    catch(ClassNotFoundException cnfe4)
+                    {
+                        NPlugin._log.severe("[NBTLib] Can't find Minecraft package! (" + minecraft + "/" + craftbukkit + ")");
+                        //cnfe4.printStackTrace();
+                    }
+                }
             }
         }
+        _disabled = disabled;
+        _pversion = pversion;
+        _minecraft = minecraft + ".";
+        _craftbukkit = craftbukkit + ".";
+        if(!_disabled)
+        {
+            if(NBT.internal0() == 0) // Used to trigger class initialization
+            {
+                NPlugin._log.severe("[NBTLib] Can't find NBT constructors!");
+                _disabled = true;
+            }
+        }
+    }
+    
+    private static Class findClass(String name)
+    throws ClassNotFoundException
+    {
+        return Class.forName(name);
     }
     
     /**
@@ -105,7 +142,7 @@ public class NBTLib
      */
     public static Class getMinecraftClass(String className) throws ClassNotFoundException, NBTLibDisabledException
     {
-        return Class.forName(getMinecraftPackage() + className);
+        return findClass(getMinecraftPackage() + className);
     }
     
     /**
@@ -122,7 +159,7 @@ public class NBTLib
      */
     public static Class getCraftbukkitClass(String className) throws ClassNotFoundException, NBTLibDisabledException
     {
-        return Class.forName(getCraftbukkitPackage() + className);
+        return findClass(getCraftbukkitPackage() + className);
     }
     
     /**
@@ -267,7 +304,7 @@ public class NBTLib
     public static Object fetchDynamicField(String className, Object object, Object type)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException
     {
-        return getField(Class.forName(className), parseClass(type)).get(object);
+        return getField(findClass(className), parseClass(type)).get(object);
     }
     
     /**
@@ -284,7 +321,7 @@ public class NBTLib
     public static Object fetchField(String className, Object object, String name)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException
     {
-        return getField(Class.forName(className), name).get(object);
+        return getField(findClass(className), name).get(object);
     }
     
     /**
@@ -378,7 +415,7 @@ public class NBTLib
     public static void putDynamicField(String className, Object object, Object type, Object value)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException
     {
-        getField(Class.forName(className), parseClass(type)).set(object, value);
+        getField(findClass(className), parseClass(type)).set(object, value);
     }
     
     /**
@@ -396,7 +433,7 @@ public class NBTLib
     public static void putField(String className, Object object, String name, Object value)
     throws ClassNotFoundException, IllegalAccessException, NoSuchFieldException
     {
-        getField(Class.forName(className), name).set(object, value);
+        getField(findClass(className), name).set(object, value);
     }
     
     /**
@@ -493,7 +530,7 @@ public class NBTLib
     public static Object instantiate(String className, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException
     {
-        return getConstructor(Class.forName(className), parseClass(paramTypes)).newInstance(params);
+        return getConstructor(findClass(className), parseClass(paramTypes)).newInstance(params);
     }
     
     /**
@@ -609,7 +646,7 @@ public class NBTLib
     public static Object invokeDynamic(String className, Object object, Object returnType, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        return getMethod(Class.forName(className), parseClass(returnType), parseClass(paramTypes)).invoke(object, params);
+        return getMethod(findClass(className), parseClass(returnType), parseClass(paramTypes)).invoke(object, params);
     }
     
     /**
@@ -626,7 +663,7 @@ public class NBTLib
     public static Object invoke(String className, Object object, String name, Object[] paramTypes, Object... params)
     throws ClassNotFoundException, IllegalAccessException, InvocationTargetException, NoSuchMethodException
     {
-        return getMethod(Class.forName(className), name, parseClass(paramTypes)).invoke(object, params);
+        return getMethod(findClass(className), name, parseClass(paramTypes)).invoke(object, params);
     }
     
     /**
@@ -744,7 +781,7 @@ public class NBTLib
         }
         else
         {
-            return Class.forName((String)o);
+            return findClass((String)o);
         }
     }
 }

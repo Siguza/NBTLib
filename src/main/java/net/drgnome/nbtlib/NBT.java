@@ -1,9 +1,11 @@
 // Bukkit Plugin "NBTLib" by Siguza
-// The license under which this software is released can be accessed at:
+// Released under the CC BY 3.0 (CreativeCommons Attribution 3.0 Unported) license.
+// The full license and a human-readable summary can be found at the following location:
 // http://creativecommons.org/licenses/by/3.0/
 
 package net.drgnome.nbtlib;
 
+import java.lang.reflect.*;
 import java.io.*;
 import java.util.*;
 import javax.xml.bind.DatatypeConverter;
@@ -14,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
  * <p>A bunch of NBT tools.</p>
  * <p><i><b>Note:</b> For all the exceptions, see the "invoke" methods of {@link NBTLib}.</i></p>
  */
+@SuppressWarnings("unchecked")
 public enum NBT
 {
     BOOL(-1),
@@ -30,7 +33,63 @@ public enum NBT
     COMPOUND(10),
     INT_ARRAY(11);
     
+    private static final int _nbtVersion;
+    private static final Constructor[] _constructors = new Constructor[11];
+    private static final Method[] _methods = new Method[2];
     private final int _id;
+    
+    static
+    {
+        int version = 0;
+        try
+        {
+            _methods[0] = NBTLib.getMethod(NBTLib.getMinecraftClass("NBTTagList"), "add", NBTLib.getMinecraftClass("NBTBase"));
+            _methods[1] = NBTLib.getMethod(NBTLib.getMinecraftClass("NBTTagCompound"), "set", String.class, NBTLib.getMinecraftClass("NBTBase"));
+            try
+            {
+                _constructors[0] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagByte"), String.class, byte.class);
+                _constructors[1] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagShort"), String.class, short.class);
+                _constructors[2] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagInt"), String.class, int.class);
+                _constructors[3] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagLong"), String.class, long.class);
+                _constructors[4] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagFloat"), String.class, float.class);
+                _constructors[5] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagDouble"), String.class, double.class);
+                _constructors[6] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagByteArray"), String.class, byte[].class);
+                _constructors[7] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagString"), String.class, String.class);
+                _constructors[8] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagList"), String.class);
+                _constructors[9] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagCompound"), String.class);
+                _constructors[10] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagIntArray"), String.class, int[].class);
+                version = 1;
+            }
+            catch(Exception e1)
+            {
+                try
+                {
+                    _constructors[0] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagByte"), byte.class);
+                    _constructors[1] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagShort"), short.class);
+                    _constructors[2] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagInt"), int.class);
+                    _constructors[3] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagLong"), long.class);
+                    _constructors[4] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagFloat"), float.class);
+                    _constructors[5] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagDouble"), double.class);
+                    _constructors[6] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagByteArray"), byte[].class);
+                    _constructors[7] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagString"), String.class);
+                    _constructors[8] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagList"));
+                    _constructors[9] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagCompound"));
+                    _constructors[10] = NBTLib.getConstructor(NBTLib.getMinecraftClass("NBTTagIntArray"), int[].class);
+                    version = 2;
+                }
+                catch(Exception e2)
+                {
+                    e1.printStackTrace();
+                    e2.printStackTrace();
+                }
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        _nbtVersion = version;
+    }
     
     private NBT(int id)
     {
@@ -45,6 +104,12 @@ public enum NBT
     public int getId()
     {
         return _id;
+    }
+    
+    // Used to trigger class initialization
+    static int internal0()
+    {
+        return _nbtVersion;
     }
     
     /**
@@ -74,6 +139,7 @@ public enum NBT
     }
     
     /**
+     * <p><i><b>Deprecated.</b></i></p>
      * <p>Converts a {@link Map} into an NBTTagCompound.</p>
      *
      * @param name  The name of the tag.
@@ -114,7 +180,7 @@ public enum NBT
     public static Object tagToNBT(String name, Tag tag)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
-        return tagToNBT(tag);
+        return tagToNBT0(name, tag);
     }
     
     /**
@@ -127,7 +193,71 @@ public enum NBT
     public static Object tagToNBT(Tag tag)
     throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
     {
-        switch(tag.getType())
+        return tagToNBT0("", tag);
+    }
+    
+    private static Object tagToNBT0(String name, Tag tag)
+    throws ClassNotFoundException, IllegalAccessException, InstantiationException, InvocationTargetException, NoSuchMethodException, NBTLibDisabledException
+    {
+        if(_nbtVersion == 2)
+        {
+            switch(tag.getType())
+            {
+                case END:
+                    return null;
+                case BOOL:
+                    return _constructors[0].newInstance((byte)(((Boolean)tag.get()).booleanValue() ? 1 : 0));
+                case LIST:
+                    Object list = _constructors[8].newInstance();
+                    for(Tag t : (List<Tag>)tag.get())
+                    {
+                        _methods[0].invoke(list, tagToNBT0("", t));
+                    }
+                    return list;
+                case COMPOUND:
+                    Object map = _constructors[9].newInstance();
+                    for(Map.Entry<String, Tag> entry : ((Map<String, Tag>)tag.get()).entrySet())
+                    {
+                        String key = entry.getKey();
+                        _methods[1].invoke(map, key, tagToNBT0(key, entry.getValue()));
+                    }
+                    return map;
+                default:
+                    return _constructors[tag.getType().getId() - 1].newInstance(tag.get());
+            }
+        }
+        else if(_nbtVersion == 1)
+        {
+            switch(tag.getType())
+            {
+                case END:
+                    return null;
+                case BOOL:
+                    return _constructors[0].newInstance(name, (byte)(((Boolean)tag.get()).booleanValue() ? 1 : 0));
+                case LIST:
+                    Object list = _constructors[8].newInstance(name);
+                    for(Tag t : (List<Tag>)tag.get())
+                    {
+                        _methods[0].invoke(list, tagToNBT0("", t));
+                    }
+                    return list;
+                case COMPOUND:
+                    Object map = _constructors[9].newInstance(name);
+                    for(Map.Entry<String, Tag> entry : ((Map<String, Tag>)tag.get()).entrySet())
+                    {
+                        String key = entry.getKey();
+                        _methods[1].invoke(map, key, tagToNBT0(key, entry.getValue()));
+                    }
+                    return map;
+                default:
+                    return _constructors[tag.getType().getId() - 1].newInstance(name, tag.get());
+            }
+        }
+        else
+        {
+            throw new NBTLibDisabledException();
+        }
+        /*switch(tag.getType())
         {
             case BOOL:
                 return NBTLib.instantiateMinecraft("NBTTagByte", new Object[]{byte.class}, new Object[]{(byte)(((Boolean)tag.get()).booleanValue() ? 1 : 0)});
@@ -165,7 +295,7 @@ public enum NBT
             case INT_ARRAY:
                 return NBTLib.instantiateMinecraft("NBTTagIntArray", new Object[]{int[].class}, new Object[]{(int[])tag.get()});
         }
-        return null;
+        return null;*/
     }
     
     /**
